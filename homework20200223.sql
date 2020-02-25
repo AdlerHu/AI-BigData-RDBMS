@@ -18,180 +18,180 @@ INSERT INTO place VALUES ('TL', '泰國');
 INSERT INTO place VALUES ('US', '美國');
 
 SET SQL_SAFE_UPDATES = 0; 
-UPDATE food set expiredate = adddate(expiredate, INTERVAL 2 YEAR) ;
+UPDATE food SET expiredate = ADDDATE(expiredate, INTERVAL 2 YEAR) ;
 
-select * from food;
-select name, expiredate, price from food;
-select 
-	name as '名稱',
-	expiredate as '到期日',
-	price as '價格'
-    from food;
-select distinct catalog from food;
-select 
+SELECT * FROM food;
+SELECT name, expiredate, price FROM food;
+SELECT 
+	name AS '名稱',
+	expiredate AS '到期日',
+	price AS '價格'
+    FROM food;
+SELECT DISTINCT catalog FROM food;
+SELECT 
 	name,
     catalog,
-    concat(name, ' ' , catalog)
-from food;
+    CONCAT(name, ' ' , catalog)
+FROM food;
 
-select name,price from food where price >=400 ;
-select name,price from food where price between 250 and 530 ;
-select name,price from food where price not between 250 and 530 ;
-select name,price from food where catalog = '點心' ;
-select name,price,catalog from food where catalog = '點心' or catalog = '飲料' ;
-select name,price from food where placeid = 'TW' or placeid = 'JP' ;
-select name, expiredate, price from food where name like '%油%';
-select name,price from food where expiredate < '2020-12-31' ;
-select name,price from food where expiredate < '2021-06-30' ;
-select name,price from food where expiredate < sysdate() + interval 6 month ;
+SELECT name,price FROM food WHERE price >=400 ;
+SELECT name,price FROM food WHERE price BETWEEN 250 AND 530 ;
+SELECT name,price FROM food WHERE price NOT BETWEEN 250 AND 530 ;
+SELECT name,price FROM food WHERE catalog = '點心' ;
+SELECT name,price,catalog FROM food WHERE catalog = '點心' OR catalog = '飲料' ;
+SELECT name,price FROM food WHERE placeid = 'TW' OR placeid = 'JP' ;
+SELECT name, expiredate, price FROM food WHERE name LIKE '%油%';
+SELECT name,price FROM food WHERE expiredate < '2020-12-31' ;
+SELECT name,price FROM food WHERE expiredate < '2021-06-30' ;
+SELECT name,price FROM food WHERE expiredate < SYSDATE() + INTERVAL 6 MONTH ;
 
-select name, expiredate, price from food order by price desc;
+SELECT name, expiredate, price FROM food ORDER BY price DESC;
 
 -- 17.	查詢前三個價格最高的食物名稱、到期日和價格，並以價格做降冪排序
-select name, expiredate, price from food order by price desc limit 3;
+SELECT name, expiredate, price FROM food ORDER BY price DESC LIMIT 3;
 
 -- 18.	查詢種類為'點心'且價格低於等於250的食物名稱和價格，並以價格做升冪排序
-select name, price from food where catalog = '點心' and price < 250 order by price;
+SELECT name, price FROM food WHERE catalog = '點心' AND price < 250 ORDER BY price;
 
 -- 19.	顯示所有食物名稱、價格和增加5%且四捨五入為整數後的價格，新價格並將表頭命名為'New Price'
-select 
+SELECT 
 	name, 
 	price,
-    round(price*1.05) as 'New Price'
-    from food;
+    ROUND(price*1.05) AS 'New Price'
+    FROM food;
     
 -- 20.	接續上題，再增加一個表頭命名為'Increase'，顯示New price減去price的值
-select
+SELECT
 	name,
     price,
-	round(price*1.05) as 'New Price',
-	(round(price*1.05) - price) as 'Increase'
-    from food;
+	ROUND(price*1.05) AS 'New Price',
+	(ROUND(price*1.05) - price) AS 'Increase'
+    FROM food;
     
 -- 21.	顯示所有食物名稱、價格和整數後的價格，新價格並將表頭命名為'New Price'；按價格分250以下、251~500和501以上三種分別增加8%,5%和3%且價格無條件捨去成整數
-select name, price,  
-	case
-		when price < 250 then round(price*1.08)
-		when price between 250 and 500 then round(price*1.05)
-        when price > 500 then round(price*1.03)
-	end 'New Price'
-from food;
+SELECT name, price,  
+	CASE
+		WHEN price < 250 THEN ROUND(price*1.08)
+		WHEN price BETWEEN 250 AND 500 THEN ROUND(price*1.05)
+        WHEN price > 500 THEN ROUND(price*1.03)
+	END 'New Price'
+FROM food;
 
 -- 22.	查詢所有食物名稱、種類、距離今天尚有幾天到期(正數表示)或已過期幾天(負數表示)和註記(有'已過期'或'未過期'兩種)，並將後兩者表頭分別命名為'Days of expired'和'expired or not'
-select	f.name,
+SELECT	f.name,
 		f.catalog,
-        datediff(f.expiredate, now()) as 'WTF',
+        DATEDIFF(f.expiredate, NOW()) AS 'WTF',
 		
-        if(datediff(f.expiredate, now()) <0,'已過期','') 'Days of expired',
-        if(datediff(f.expiredate, now()) >=0,'未過期','') 'Expired or not'     
-from food f;
+        IF(DATEDIFF(f.expiredate, NOW()) <0,'已過期','') 'Days of expired',
+        IF(DATEDIFF(f.expiredate, NOW()) >=0,'未過期','') 'Expired or not'     
+FROM food f;
 
 -- 23.	接續上題，並以過期天數做升冪排序
-select	f.name,
+SELECT	f.name,
 		f.catalog,
-        datediff(f.expiredate, now()) as 'WTF',
+        DATEDIFF(f.expiredate, NOW()) AS 'WTF',
 		
-        if(datediff(f.expiredate, now()) <0,'已過期','') 'Days of expired',
-        if(datediff(f.expiredate, now()) >=0,'未過期','') 'Expired or not'     
-from food f
-order by WTF;
+        IF(DATEDIFF(f.expiredate, NOW()) <0,'已過期','') 'Days of expired',
+        IF(DATEDIFF(f.expiredate, NOW()) >=0,'未過期','') 'Expired or not'     
+FROM food f
+ORDER BY WTF;
 
 -- --- GROUP BY & HAVING子句
 -- 24.	查詢所有食物最高、最低、加總和平均價格，表頭分別命名為'Max'、'Min'、'Sum'和'Avg'，結果皆以四捨五入的整數來顯示
-select
-	max(price) as 'Max', 
-	min(price) as 'Min', 
-    sum(price) as 'Sum', 
-    round(avg(price)) as 'Avg'
-from food;
+SELECT
+	MAX(price) AS 'Max', 
+	MIN(price) AS 'Min', 
+    SUM(price) AS 'Sum', 
+    ROUND(AVG(price)) AS 'Avg'
+FROM food;
 
 -- 25.	接續上題，查詢每個種類
-select
+SELECT
 	catalog,
-	max(price) as 'Max', 
-	min(price) as 'Min', 
-    sum(price) as 'Sum', 
-    round(avg(price)) as 'Avg'
-from food
-group by catalog;
+	MAX(price) AS 'Max', 
+	MIN(price) AS 'Min', 
+    SUM(price) AS 'Sum', 
+    ROUND(AVG(price)) AS 'Avg'
+FROM food
+GROUP BY catalog;
 
 -- 26.	接續上題，查詢每個種類且平均價格超過300，並以平均價格做降冪排序
-select
+SELECT
 	catalog,
-	max(price) as 'Max', 
-	min(price) as 'Min', 
-    sum(price) as 'Sum', 
-    round(avg(price)) as 'Avg'
-from food
-group by catalog
-having round(avg(price)) >300
-order by round(avg(price)) desc;
+	MAX(price) AS 'Max', 
+	MIN(price) AS 'Min', 
+    SUM(price) AS 'Sum', 
+    ROUND(AVG(price)) AS 'Avg'
+FROM food
+GROUP BY catalog
+HAVING ROUND(AVG(price)) >300
+ORDER BY ROUND(AVG(price)) DESC;
 
 -- 27.	顯示查詢每個種類的食物數量
-select
+SELECT
 	catalog,
-	count(name)
-from food
-group by catalog;
+	COUNT(name)
+FROM food
+GROUP BY catalog;
 
 -- 28.	查詢不同產地和每個種類的食物數量
-select
+SELECT
 	placeid,
 	catalog,
-	count(name)
-from food
-group by placeid, catalog;
+	COUNT(name)
+FROM food
+GROUP BY placeid, catalog;
 
 -- 1.	查詢所有食物名稱、產地編號、產地名稱和價格
-select 	f.name, f.placeid, p.name, f.price
-from 	food f, place p
-where 	f.placeid = p.id;
+SELECT 	f.name, f.placeid, p.name, f.price
+FROM 	food f, place p
+WHERE 	f.placeid = p.id;
 
 -- 2.	查詢所有食物名稱和產地名稱，並串接成一個字串，中間以空白隔開，並將表頭重新命為'Food name & place'
-select 	concat(f.name, " ", p.name) as 'Food name & place'
-from 	food f, place p
-where 	f.placeid = p.id;
+SELECT 	CONCAT(f.name, " ", p.name) AS 'Food name & place'
+FROM 	food f, place p
+WHERE 	f.placeid = p.id;
 
 -- 3.	查詢所有'台灣'生產的食物名稱和價格
-select 	f.name, f.price
-from 	food f, place p
-where 	f.placeid = p.id
-and		p.name = '台灣';
+SELECT 	f.name, f.price
+FROM 	food f, place p
+WHERE 	f.placeid = p.id
+AND		p.name = '台灣';
 
 -- 4.	查詢所有'台灣'和'日本'生產的食物名稱和價格，並以價格做降冪排序
-select 	f.name, f.price
-from 	food f, place p
-where 	f.placeid = p.id
-and		p.name = '台灣' or p.name = '日本'
-order by f.price desc;
+SELECT 	f.name, f.price
+FROM 	food f, place p
+WHERE 	f.placeid = p.id
+AND		p.name = '台灣' OR p.name = '日本'
+ORDER BY f.price DESC;
 
 -- 5.	查詢前三個價格最高且'台灣'生產的食物名稱、到期日和價格，並以價格做降冪排序
-select 	f.name, f.expiredate, f.price
-from 	food f, place p
-where 	f.placeid = p.id
-and		p.name = '台灣'
-order by f.price desc
-limit 	3;
+SELECT 	f.name, f.expiredate, f.price
+FROM 	food f, place p
+WHERE 	f.placeid = p.id
+AND		p.name = '台灣'
+ORDER BY f.price DESC
+LIMIT 	3;
 
 -- 6.	查詢每個產地(顯示產地名稱)最高、最低、加總和平均價格，表頭分別命名為'Max'、'Min'、'Sum'和'Avg'，結果皆以四捨五入的整數來顯示
-select 	p.name,
-		max(f.price) 		as 'Max',
-		min(f.price) 		as 'Min',
-		sum(f.price) 		as 'Sum',
-		round(avg(f.price))	as	'Avg'
+SELECT 	p.name,
+		MAX(f.price) 		AS 'Max',
+		MIN(f.price) 		AS 'Min',
+		SUM(f.price) 		AS 'Sum',
+		ROUND(AVG(f.price))	AS	'Avg'
         
-from 	food f, place p
-where 	f.placeid = p.id
-group by p.name;
+FROM 	food f, place p
+WHERE 	f.placeid = p.id
+GROUP BY p.name;
 
 -- 7.	查詢不同產地(顯示產地名稱)和每個種類的食物數量
-select 	p.name,
+SELECT 	p.name,
 		f.catalog,
-		count(f.name)
+		COUNT(f.name)
         
-from 	food f, place p
-where 	f.placeid = p.id
-group by p.name, f.catalog;
+FROM 	food f, place p
+WHERE 	f.placeid = p.id
+GROUP BY p.name, f.catalog;
 
 
 
