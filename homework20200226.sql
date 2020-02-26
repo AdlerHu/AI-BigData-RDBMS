@@ -82,8 +82,8 @@ ORDER BY f.price DESC;
 
 -- 11.	查詢每個產地(顯示產地名稱)的食物價格最高者的食物名稱和價格
 SELECT	f.name, f.price, p.name
-FROM	food f , place p
-WHERE	price = (	SELECT	MAX(price)
+FROM	food f JOIN place p
+ON	price = (	SELECT	MAX(price)
 					FROM	food
 					WHERE	placeid = f.placeid)
 AND		f.placeid = p.id;
