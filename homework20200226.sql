@@ -84,14 +84,38 @@ ORDER BY f.price DESC;
 SELECT	f.name, f.price, p.name
 FROM	food f JOIN place p
 ON	price = (	SELECT	MAX(price)
-					FROM	food
-					WHERE	placeid = f.placeid)
+				FROM	food
+				WHERE	placeid = f.placeid)
 AND		f.placeid = p.id;
 
 
+-- 1.	以不列舉欄位的方式新增一筆食物資料
+insert into food
+values ('SG003', '邁泰', '2020-03-05', 'TW', 300, '飲料');
 
+-- 2.	以列舉欄位的方式新增一筆食物資料
+insert into food (id, name, expiredate, placeid, price, catalog)
+values ('SG004', '自由古巴', '2020-02-06', 'TW', 150, '飲料');
 
+-- 3.	以不列舉欄位的方式新增多產地資料
+insert into place
+values ('DE', '德國'), ('MX', '墨西哥');
 
+-- 4.	修改一筆食物資料的價格
+update 	food f
+set		price = 180
+where	f.name = '自由古巴';
 
+-- 5.	按價格分250以下、251~500和501以上三種分別增加8%,5%和3%且價格無條件捨去成整數
+SELECT name, price,  
+	CASE
+		WHEN price < 250 THEN ROUND(price*1.08)
+		WHEN price BETWEEN 250 AND 500 THEN ROUND(price*1.05)
+        WHEN price > 500 THEN ROUND(price*1.03)
+	END 'New Price'
+FROM food;
+
+-- 6.	刪除一筆食物資料
+delete from food where name = '自由古巴';
 
 
