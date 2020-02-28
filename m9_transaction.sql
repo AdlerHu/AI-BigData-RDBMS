@@ -1,65 +1,65 @@
 # Explicit Transaction ( 外顯式交易)
 # 第一次select可以看的到601,602, 如果這時別人也在看department表看不到這兩筆,rollback後這兩筆就沒有進去資料庫
-start transaction;
-insert into department values (601, 'RD', 1001);
-insert into department values (602, 'IT', null);
-select * from department;
-rollback;
-select * from department;
+START TRANSACTION;
+INSERT INTO department VALUES (601, 'RD', 1001);
+INSERT INTO department VALUES (602, 'IT', NULL);
+SELECT * FROM department;
+ROLLBACK;
+SELECT * FROM department;
 
 # commit 代表交易完成,所有人都看的到這兩筆
-start transaction;
-insert into department values (601, 'RD', 1001);
-insert into department values (602, 'IT', null);
-select * from department;
-commit;
-select * from department;
+START TRANSACTION;
+INSERT INTO department VALUES (601, 'RD', 1001);
+INSERT INTO department VALUES (602, 'IT', NULL);
+SELECT * FROM department;
+COMMIT;
+SELECT * FROM department;
 
 # Implicit(隱含式交易) 
-set autoCommit = 0;
-insert into department values (603, 'RD', 1001);
-insert into department values (604, 'IT', null);
-select * from department;
-rollback;
-select * from department;
+SET autoCommit = 0;
+INSERT INTO department VALUES (603, 'RD', 1001);
+INSERT INTO department VALUES (604, 'IT', NULL);
+SELECT * FROM department;
+ROLLBACK;
+SELECT * FROM department;
 
-insert into department values (603, 'RD', 1001);
-insert into department values (604, 'IT', null);
-select * from department;
-commit;
-select * from department;
-set autocommit = 1;
+INSERT INTO department VALUES (603, 'RD', 1001);
+INSERT INTO department VALUES (604, 'IT', NULL);
+SELECT * FROM department;
+COMMIT;
+SELECT * FROM department;
+SET autocommit = 1;
 
 # rollback to A 代表回到savepoint A ,所以只有savepoint A之前的指令會進資料庫
-begin;
-select	empno, ename, salary
-from	employee
-where	empno in (1001, 1002, 1003);
-update	employee set salary = 60000 where empno = 1001;
-savepoint A;
-update	employee set salary = 40000 where empno = 1002;
-savepoint B;
-update	employee set salary = 60000 where empno = 1003;
-rollback to A;
-commit;
-select	empno, ename, salary
-from	employee
-where	empno in (1001, 1002, 1003);
+BEGIN;
+SELECT	empno, ename, salary
+FROM	employee
+WHERE	empno IN (1001, 1002, 1003);
+UPDATE	employee SET salary = 60000 WHERE empno = 1001;
+SAVEPOINT A;
+UPDATE	employee SET salary = 40000 WHERE empno = 1002;
+SAVEPOINT B;
+UPDATE	employee SET salary = 60000 WHERE empno = 1003;
+ROLLBACK TO A;
+COMMIT;
+SELECT	empno, ename, salary
+FROM	employee
+WHERE	empno IN (1001, 1002, 1003);
 
-begin;
-select	salary
-from	employee
-where	empno = 1001;
+BEGIN;
+SELECT	salary
+FROM	employee
+WHERE	empno = 1001;
 
-update 	employee
-set		salary = 60001
-where	empno = 1001;
+UPDATE 	employee
+SET		salary = 60001
+WHERE	empno = 1001;
 
-commit;
+COMMIT;
 
-select	salary
-from	employee
-where	empno = 1001;
+SELECT	salary
+FROM	employee
+WHERE	empno = 1001;
 
 
 

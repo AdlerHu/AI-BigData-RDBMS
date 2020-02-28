@@ -1,8 +1,8 @@
-show index
-from employee;
-s
-create index ename_idx
-on employee (ename);
+SHOW INDEX
+FROM employee;
 
-drop index ename_idx
-on employee;
+CREATE INDEX ename_idx
+ON employee (ename);
+
+DROP INDEX ename_idx
+ON employee;
